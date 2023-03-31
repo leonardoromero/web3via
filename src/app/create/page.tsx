@@ -1,8 +1,8 @@
 import React from 'react'
 import styles from './create.module.scss'
 
-const create = () => {
-	return <h1 className={styles.title}>create</h1>
+const Create = () => {
+	return <h1 className={styles.title}>Create</h1>
 }
 
-export default create
+export default Create

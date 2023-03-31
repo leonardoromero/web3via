@@ -2,16 +2,40 @@
 
 .title {
 	color: $accent-orange;
+	font-family: var(--font-marmelad);
+}
+
+.heading-1 {
+	@extend .title;
+	font-size: 6rem;
+}
+
+.heading-2 {
+	@extend .title;
+	font-size: 5rem;
+}
+
+.heading-3 {
+	@extend .title;
+	font-size: 4rem;
+}
+
+.heading-4 {
+	@extend .title;
 	font-size: 3rem;
 }
 
 .link {
 	color: $base-grey;
-	font-size:2rem;
+	font-size: 2rem;
 }
 
 .links {
 	display: flex;
 	list-style: none;
 	gap: 1rem;
+}
+
+.header {
+	height: 4vh;
 }
