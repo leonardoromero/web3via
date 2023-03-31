@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import Link from 'next/link'
 import { Marmelad, Cambay } from 'next/font/google'
 
@@ -42,7 +42,7 @@ export default function RootLayout({
 	children,
 }: {
 	children: React.ReactNode
-}) {
+}):ReactElement {
 	return (
 			<html lang="en" className={`${marmelad.variable} ${cambay.variable}`}>
 				<body>

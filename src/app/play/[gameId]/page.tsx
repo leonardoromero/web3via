@@ -4,8 +4,7 @@ interface IGameProps {
 	}
 }
 
-const Game = ({ params }: IGameProps) => {
-	const { gameId } = params
+const Game = ({ params: { gameId } }: IGameProps) => {
 	return <div style={{ color: 'white' }}>{gameId}</div>
 }
 
