@@ -1,0 +1,17 @@
+@import './variables.module.scss';
+
+.title {
+	color: $accent-orange;
+	font-size: 3rem;
+}
+
+.link {
+	color: $base-grey;
+	font-size:2rem;
+}
+
+.links {
+	display: flex;
+	list-style: none;
+	gap: 1rem;
+}
