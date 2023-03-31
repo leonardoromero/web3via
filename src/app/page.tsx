@@ -2,13 +2,16 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import styles from './home.module.scss'
+import useWeb3Auth from './auth'
 
 export default function Home() {
-	const isWalletConnected: boolean = true
 	const [gameId, setGameId] = useState(0)
 	const [isWarningVisible, setIsWarningVisible] = useState(false)
 	const gameLink = gameId !== 0 ? `/play/${gameId}` : '/'
-
+	const { login, getUserInfo, logout, provider } = useWeb3Auth()
+	const isWalletConnected: boolean = provider !== null
+	console.log(provider !== undefined)
+	console.log(provider)
 	const handleClick = () => {
 		if (gameId === 0) setIsWarningVisible(true)
 	}
@@ -17,7 +20,8 @@ export default function Home() {
 		return (
 			<div className={styles.home}>
 				<h1>web3via</h1>
-				<p>take your prize home instantly</p>
+				<p id="console">take your prize home instantly</p>
+
 				<div className={styles.actions}>
 					<Link href="/create" className={styles.link}>
 						create new game
@@ -38,6 +42,12 @@ export default function Home() {
 							GO!
 						</Link>
 					</div>
+					<button onClick={getUserInfo} className={styles.link}>
+						getUserInfo
+					</button>
+					<button onClick={logout} className={styles.link}>
+						LOGOUT
+					</button>
 					<span
 						style={isWarningVisible ? { color: 'white' } : { opacity: '0' }}
 						className={styles.warning}
@@ -53,7 +63,10 @@ export default function Home() {
 		<div className={styles.home}>
 			<h1>web3via</h1>
 			<p>take your prize home instantly</p>
-			<div className={styles.actions}>
+			<div id="console" style={{ whiteSpace: 'pre-line' }}>
+				<p style={{ whiteSpace: 'pre-line' }}>Logged in Successfully!</p>
+			</div>
+			<div onClick={login} className={styles.actions}>
 				<button>connect wallet</button>
 			</div>
 		</div>
