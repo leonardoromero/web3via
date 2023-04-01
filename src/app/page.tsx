@@ -1,18 +1,17 @@
 'use client'
-import { useState } from 'react'
+import React, { useState, ReactElement } from 'react'
 import Link from 'next/link'
 import styles from './home.module.scss'
 import useWeb3Auth from './auth'
 
-export default function Home() {
+export default function Home(): ReactElement {
 	const [gameId, setGameId] = useState(0)
 	const [isWarningVisible, setIsWarningVisible] = useState(false)
-	const gameLink = gameId !== 0 ? `/play/${gameId}` : '/'
+	const gameLink: string = gameId !== 0 ? `/play/${gameId}` : '/'
 	const { login, getUserInfo, logout, provider } = useWeb3Auth()
 	const isWalletConnected: boolean = provider !== null
-	console.log(provider !== undefined)
-	console.log(provider)
-	const handleClick = () => {
+
+	const handleClick = (): void => {
 		if (gameId === 0) setIsWarningVisible(true)
 	}
 

@@ -1,7 +1,7 @@
 @import './styles/common.module.scss';
 
 .home {
-	color: white;
+	color: $base-grey;
 	height: 96vh;
 	background: url('../../public/home.svg') no-repeat bottom;
 	display: flex;
@@ -10,7 +10,7 @@
 
 	h1 {
 		@extend .heading-1;
-		margin: 15rem 0 3rem;
+		margin: 15rem 0 1.5rem;
 	}
 
 	p {
@@ -26,7 +26,7 @@
 		gap: 1rem;
 
 		.warning {
-			font-size:1.25rem;
+			font-size: 1.25rem;
 			text-align: center;
 		}
 
