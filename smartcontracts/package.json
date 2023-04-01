@@ -1,0 +1,24 @@
+{
+  "name": "smartcontracts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "parcel build frontend/index.html && cp _redirects dist/_redirects",
+    "blockchain": "npx hardhat --emoji --show-stack-traces --verbose node",
+    "sc:deploy": "npm run sc:compile && npx hardhat run ./scripts/1_deploy.js --network localhost",
+    "sc:compile": "npx hardhat compile"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ethers": "^5.7.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@nomiclabs/hardhat-ethers": "^2.1.1",
+    "hardhat": "^2.13.0"
+  }
+}
