@@ -42,23 +42,23 @@ export default function RootLayout({
 	children,
 }: {
 	children: React.ReactNode
-}):ReactElement {
+}): ReactElement {
 	return (
-			<html lang="en" className={`${marmelad.variable} ${cambay.variable}`}>
-				<body>
-					<header className={styles.header}>
-						<ul className={styles.links}>
-							{routes.map((route) => (
-								<li key={route.name}>
-									<Link href={route.path} className={styles.link}>
-										{route.name}
-									</Link>
-								</li>
-							))}
-						</ul>
-					</header>
-					<main>{children}</main>
-				</body>
-			</html>
+		<html lang="en" className={`${marmelad.variable} ${cambay.variable}`}>
+			<body>
+				<header className={styles.header}>
+					<ul className={styles.links}>
+						{routes.map((route) => (
+							<li key={route.name}>
+								<Link href={route.path} className={styles.link}>
+									{route.name}
+								</Link>
+							</li>
+						))}
+					</ul>
+				</header>
+				<main>{children}</main>
+			</body>
+		</html>
 	)
 }
