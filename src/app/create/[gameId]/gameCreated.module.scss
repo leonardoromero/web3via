@@ -1,0 +1,25 @@
+@import '../../styles/common.module.scss';
+
+.gameCreated {
+	color: $base-grey;
+	height: 96vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	h2 {
+		font-size: 3rem;
+		text-align: center;
+
+		span {
+			color: $accent-orange;
+			font-size: 4rem;
+		}
+	}
+
+	.link {
+		@extend .button;
+		margin: 10rem 0;
+	}
+}

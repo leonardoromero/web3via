@@ -42,15 +42,7 @@
 		}
 
 		input {
-			text-align: center;
-			border: 1px solid $accent-orange;
-			background-color: $base-blue;
-			color: $base-grey;
-			padding: 1rem;
-			border-radius: 1rem;
-			&:focus {
-				outline: 1px solid $accent-orange;
-			}
+			@extend .input;
 		}
 
 		.play {

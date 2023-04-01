@@ -1,0 +1,29 @@
+@import '../styles/common.module.scss';
+
+.gamesCreated {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+
+	.title {
+		@extend .heading-4;
+		margin: 5rem 0;
+	}
+
+	.gameCreated {
+		color: white;
+		font-size: 4rem;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border: 1px solid $accent-orange;
+		padding: 2rem;
+		width: 90%;
+		border-radius: 1rem;
+
+		.button {
+			width:25%;
+		}
+	}
+}
