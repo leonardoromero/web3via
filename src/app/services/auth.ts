@@ -6,12 +6,9 @@ import {
 	WALLET_ADAPTERS,
 } from '@web3auth/base'
 import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
-import {
-	WalletConnectV2Adapter,
-	getWalletConnectV2Settings,
-} from '@web3auth/wallet-connect-v2-adapter'
-import QRCodeModal from '@walletconnect/qrcode-modal'
-import RPC from './ethersRPC' // for using ethers.js
+import RPC from '../../utils/ethersRPC'
+import { MetamaskAdapter } from '@web3auth/metamask-adapter'
+import GameContract from '@/utils/gameContract'
 
 const clientId: string = process.env.WEB3AUTH_CLIENT_ID || ''
 
@@ -20,6 +17,7 @@ export default function useWeb3Auth() {
 	const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(
 		null
 	)
+	const [initExecuted, setInitExecuted] = useState<boolean>(false)
 
 	useEffect(() => {
 		const init = async () => {
@@ -37,33 +35,32 @@ export default function useWeb3Auth() {
 				const openloginAdapter = new OpenloginAdapter()
 				web3auth.configureAdapter(openloginAdapter)
 
-				// adding wallet connect v2 adapter
-				const defaultWcSettings = await getWalletConnectV2Settings(
-					'eip155',
-					[1, 137, 5],
-					'04309ed1007e77d1f119b85205bb779d'
-				)
-				const walletConnectV2Adapter = new WalletConnectV2Adapter({
-					adapterSettings: {
-						qrcodeModal: QRCodeModal,
-						...defaultWcSettings.adapterSettings,
+				const metamaskAdapter = new MetamaskAdapter({
+					clientId,
+					sessionTime: 3600,
+					chainConfig: {
+						chainNamespace: CHAIN_NAMESPACES.EIP155,
+						chainId: '0x5',
+						rpcTarget: 'https://rpc.ankr.com/eth_goerli',
 					},
-					loginSettings: { ...defaultWcSettings.loginSettings },
 				})
 
-				web3auth.configureAdapter(walletConnectV2Adapter)
+				web3auth.configureAdapter(metamaskAdapter)
 
 				await web3auth.init()
 				if (web3auth.provider) {
 					setProvider(web3auth.provider)
 				}
+				setInitExecuted(true)
 			} catch (error) {
 				console.error(error)
 			}
 		}
 
-		init()
-	}, [])
+		if (!initExecuted) {
+			init()
+		}
+	}, [initExecuted])
 	const login = async () => {
 		if (!web3auth) {
 			uiConsole('web3auth not initialized yet')
@@ -75,17 +72,16 @@ export default function useWeb3Auth() {
 				loginProvider: 'google',
 			}
 		)
+
 		setProvider(web3authProvider)
 	}
 
-	const loginWCModal = async () => {
+	const loginMetamask = async () => {
 		if (!web3auth) {
 			uiConsole('web3auth not initialized yet')
 			return
 		}
-		const web3authProvider = await web3auth.connectTo(
-			WALLET_ADAPTERS.WALLET_CONNECT_V2
-		)
+		const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.METAMASK)
 		setProvider(web3authProvider)
 	}
 
@@ -204,15 +200,29 @@ export default function useWeb3Auth() {
 		uiConsole(privateKey)
 	}
 
+	const createGame = async ({ txInProcess, txFinished }: any) => {
+		if (!provider) {
+			uiConsole('provider not initialized yet')
+			return
+		}
+		const rpc = new GameContract(provider)
+		const privateKey = await rpc.createGame({
+			txInProcess,
+			txFinished,
+		})
+		uiConsole(privateKey)
+	}
+
 	function uiConsole(...args: any[]): void {
 		const el = document.querySelector('#console')
 		if (el) {
 			el.innerHTML = JSON.stringify(args || {}, null, 2)
 		}
 	}
+	console.log({ provider })
 	return {
 		login,
-		loginWCModal,
+		loginMetamask,
 		authenticateUser,
 		getUserInfo,
 		logout,
@@ -224,6 +234,7 @@ export default function useWeb3Auth() {
 		sendTransaction,
 		signMessage,
 		getPrivateKey,
+		createGame,
 		provider,
 	}
 }

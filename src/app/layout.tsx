@@ -4,6 +4,7 @@ import { Marmelad, Cambay } from 'next/font/google'
 
 import './styles/globals.scss'
 import styles from './styles/common.module.scss'
+import { ContextProvider } from './contexts/providerContext'
 
 export const metadata = {
 	title: 'web3via',
@@ -42,23 +43,25 @@ export default function RootLayout({
 	children,
 }: {
 	children: React.ReactNode
-}):ReactElement {
+}): ReactElement {
 	return (
 		<html lang="en" className={`${marmelad.variable} ${cambay.variable}`}>
-			<body>
-				<header className={styles.header}>
-					<ul className={styles.links}>
-						{routes.map((route) => (
-							<li key={route.name}>
-								<Link href={route.path} className={styles.link}>
-									{route.name}
-								</Link>
-							</li>
-						))}
-					</ul>
-				</header>
-				<main>{children}</main>
-			</body>
+			<ContextProvider>
+				<body>
+					<header className={styles.header}>
+						<ul className={styles.links}>
+							{routes.map((route) => (
+								<li key={route.name}>
+									<Link href={route.path} className={styles.link}>
+										{route.name}
+									</Link>
+								</li>
+							))}
+						</ul>
+					</header>
+					<main>{children}</main>
+				</body>
+			</ContextProvider>
 		</html>
 	)
 }

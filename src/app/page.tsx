@@ -1,16 +1,16 @@
 'use client'
-import React, { useState, ReactElement } from 'react'
+import React, { useState, ReactElement, useContext } from 'react'
 import Link from 'next/link'
 import styles from './home.module.scss'
-import useWeb3Auth from './auth'
+import { EthersProviderContext } from './contexts/providerContext'
 
 export default function Home(): ReactElement {
 	const [gameId, setGameId] = useState(0)
 	const [isWarningVisible, setIsWarningVisible] = useState(false)
 	const gameLink: string = gameId !== 0 ? `/play/${gameId}` : '/'
-	const { login, getUserInfo, logout, provider } = useWeb3Auth()
+	const { ethersProvider } = useContext(EthersProviderContext)
+	const { login, loginMetamask, provider, logout, getUserInfo } = ethersProvider
 	const isWalletConnected: boolean = provider !== null
-
 	const handleClick = (): void => {
 		if (gameId === 0) setIsWarningVisible(true)
 	}
@@ -41,10 +41,10 @@ export default function Home(): ReactElement {
 							GO!
 						</Link>
 					</div>
-					<button onClick={getUserInfo} className={styles.link}>
+					<button onClick={getUserInfo} className={styles.links}>
 						getUserInfo
 					</button>
-					<button onClick={logout} className={styles.link}>
+					<button onClick={logout} className={styles.links}>
 						LOGOUT
 					</button>
 					<span
@@ -65,7 +65,10 @@ export default function Home(): ReactElement {
 			<div id="console" style={{ whiteSpace: 'pre-line' }}>
 				<p style={{ whiteSpace: 'pre-line' }}>Logged in Successfully!</p>
 			</div>
-			<div onClick={login} className={styles.actions}>
+			<div onClick={login} className={styles.links}>
+				<button>connect via Email</button>
+			</div>
+			<div onClick={loginMetamask} className={styles.links}>
 				<button>connect wallet</button>
 			</div>
 		</div>
