@@ -2,13 +2,20 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
+error Unauthorized();
+
+error InvalidPrize(); // 'Prize for each winner should be equal or less than the total prize'
+
+error InsuficientGameBalance();
+
+error NoPrizeOrAlreadyClaimed();
+
 /** 
  * @title Web3via GameManager
  */
 contract GameManager {
 
   struct Game {
-
     uint256 balance;
     uint256 prize;
     address owner;
@@ -25,12 +32,16 @@ contract GameManager {
   }
 
   modifier onlyTrustedManager() {
-    require(msg.sender == trustedManager);
+    if(msg.sender != trustedManager) {
+      revert Unauthorized();
+    }
     _;
   }
 
   modifier onlyGameOwner(uint256 gameId) {
-    require(msg.sender == games[gameId].owner);
+    if(msg.sender != games[gameId].owner) {
+      revert Unauthorized();
+    }
     _;
   }
 
@@ -41,8 +52,13 @@ contract GameManager {
   event GameResult(uint256 gameId);
 
   function publishGameResult(uint256 gameId, address[] memory _winners) public onlyTrustedManager {
+
     for (uint256 i=0; i < _winners.length; ++i) {
-        games[ gameId ].winnersBalance[ _winners[i] ] = games[i].prize;
+
+      games[gameId].winners.push( _winners[i] );
+
+      games[gameId].winnersBalance[ _winners[i] ] = games[gameId].prize;
+
     }
     emit GameResult(gameId);
   }
@@ -51,7 +67,9 @@ contract GameManager {
 
   function createGame(uint256 gameId, uint256 prize) public payable {
 
-    require(prize <= msg.value, 'Prize for each winner should be equal or less than the total prize');
+    if (msg.value < prize) {
+      revert InvalidPrize();
+    }
 
     games[gameId].owner = msg.sender;
     games[gameId].prize = prize;
@@ -72,11 +90,16 @@ contract GameManager {
   }
 
   function _sendPrize(uint256 gameId, address winner) private {
-    uint256 winnersPrize = games[gameId].winnersBalance[winner];
+    uint256 winnersPrize = games[gameId].winnersBalance[ winner ];
     uint256 gameBalance = games[gameId].balance;
 
-    require(winnersPrize > 0, "No ganaste nada campeon");
-    require(gameBalance > winnersPrize, "No hay guita");
+    if (winnersPrize <= 0) {
+      revert NoPrizeOrAlreadyClaimed();
+    } 
+
+    if (gameBalance < winnersPrize) {
+      revert InsuficientGameBalance();
+    }
 
     games[gameId].balance -= winnersPrize;
 
@@ -94,5 +117,9 @@ contract GameManager {
 
   function gameWinners(uint256 gameId) public view returns (address[] memory winners) {
     return games[gameId].winners;
+  }
+
+  function prizeGameWinner(uint256 gameId, address winner) public view returns (uint256 prize) {
+    return games[gameId].winnersBalance[ winner ];
   }
 }

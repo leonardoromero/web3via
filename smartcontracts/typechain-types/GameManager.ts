@@ -37,6 +37,7 @@ export interface GameManagerInterface extends utils.Interface {
     "gamePrize(uint256)": FunctionFragment;
     "gameWinners(uint256)": FunctionFragment;
     "games(uint256)": FunctionFragment;
+    "prizeGameWinner(uint256,address)": FunctionFragment;
     "publishGameResult(uint256,address[])": FunctionFragment;
     "trustedManager()": FunctionFragment;
   };
@@ -50,6 +51,7 @@ export interface GameManagerInterface extends utils.Interface {
       | "gamePrize"
       | "gameWinners"
       | "games"
+      | "prizeGameWinner"
       | "publishGameResult"
       | "trustedManager"
   ): FunctionFragment;
@@ -83,6 +85,10 @@ export interface GameManagerInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "prizeGameWinner",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "publishGameResult",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>[]]
   ): string;
@@ -107,6 +113,10 @@ export interface GameManagerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "games", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "prizeGameWinner",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "publishGameResult",
     data: BytesLike
@@ -228,6 +238,12 @@ export interface GameManager extends BaseContract {
       }
     >;
 
+    prizeGameWinner(
+      gameId: PromiseOrValue<BigNumberish>,
+      winner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { prize: BigNumber }>;
+
     publishGameResult(
       gameId: PromiseOrValue<BigNumberish>,
       _winners: PromiseOrValue<string>[],
@@ -280,6 +296,12 @@ export interface GameManager extends BaseContract {
     }
   >;
 
+  prizeGameWinner(
+    gameId: PromiseOrValue<BigNumberish>,
+    winner: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   publishGameResult(
     gameId: PromiseOrValue<BigNumberish>,
     _winners: PromiseOrValue<string>[],
@@ -331,6 +353,12 @@ export interface GameManager extends BaseContract {
         owner: string;
       }
     >;
+
+    prizeGameWinner(
+      gameId: PromiseOrValue<BigNumberish>,
+      winner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     publishGameResult(
       gameId: PromiseOrValue<BigNumberish>,
@@ -403,6 +431,12 @@ export interface GameManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    prizeGameWinner(
+      gameId: PromiseOrValue<BigNumberish>,
+      winner: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     publishGameResult(
       gameId: PromiseOrValue<BigNumberish>,
       _winners: PromiseOrValue<string>[],
@@ -447,6 +481,12 @@ export interface GameManager extends BaseContract {
 
     games(
       arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    prizeGameWinner(
+      gameId: PromiseOrValue<BigNumberish>,
+      winner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

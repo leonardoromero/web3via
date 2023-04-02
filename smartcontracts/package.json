@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx hardhat test",
     "build": "parcel build frontend/index.html && cp _redirects dist/_redirects",
     "blockchain": "npx hardhat --emoji --show-stack-traces --verbose node",
     "sc:deploy": "npm run sc:compile && npx hardhat run ./scripts/1_deploy.js --network localhost",

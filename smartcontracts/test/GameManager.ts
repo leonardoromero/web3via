@@ -1,5 +1,4 @@
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-// import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
@@ -19,7 +18,7 @@ describe("GameManager", function () {
     it("Should set the right trustedManager", async function () {
       const { gameManager, trustedManager } = await loadFixture(deployGameManagerFixture);
 
-      expect(await gameManager.trustedManager()).to.equal(trustedManager);
+      expect(await gameManager.trustedManager()).to.equal(trustedManager.address);
     });
 
   });
@@ -33,9 +32,9 @@ describe("GameManager", function () {
       const prize = 25;      // wei
       const value = 1;       // wei
 
-      await expect(gameManager.createGame(gameId, prize, { value })).to.be.revertedWith(
-        "Prize for each winner should be equal or less than the total prize"
-      );
+      await expect(gameManager.createGame(gameId, prize, { value }))
+        .to.be
+        .revertedWithCustomError(gameManager, 'InvalidPrize');
     });
 
     it("Should create a game with the correct prize, balance and owner", async function () {
@@ -43,9 +42,9 @@ describe("GameManager", function () {
         deployGameManagerFixture
       );  
 
-      const gameId = 123456; // some random number
+      const gameId = 123456;  // some random number
       const prize = 100;      // wei
-      const value = 100;       // wei
+      const value = 100;      // wei
 
       // We use gameManager.connect() to send a transaction from another account
       await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
@@ -53,10 +52,174 @@ describe("GameManager", function () {
       const game = await gameManager.games(gameId);
 
       await expect(game.balance).to.equal(value);
-      await expect(game.owner).to.equal(gameCreator);
+      await expect(game.owner).to.equal(gameCreator.address);
       await expect(game.prize).to.equal(prize);
     });
 
+
+  });
+
+  describe("Game Results Published", function () {
+
+    it("Should publish the winners for a game", async function () {
+      const { gameManager, trustedManager, gameCreator, participant1, participant2, participant3 } = await loadFixture(deployGameManagerFixture);
+
+      const gameId = 123456;
+      const prize = 100;
+      const value = 100;
+
+
+      await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
+
+      const winners = [
+        participant1.address,
+        participant2.address
+      ]
+
+      await gameManager.connect(trustedManager).publishGameResult(gameId, winners)
+
+      const winnersOnChain = await gameManager.gameWinners(gameId);
+
+      for (let i = 0; i<winnersOnChain.length; i++) {
+        expect(winnersOnChain[i]).to.equal(winners[i]);
+      }
+
+      for (let i = 0; i<winnersOnChain.length; i++) {
+
+        const winner = winnersOnChain[i];
+
+        const prizeOnChain = await gameManager.prizeGameWinner(gameId, winner);
+
+        expect(prizeOnChain).to.equal( prize );
+      }
+      
+    });
+
+  });
+
+  describe("Game Prize Claim", function () {
+
+    it("A winner should be able to claim prize ", async function () {
+      const { gameManager, trustedManager, gameCreator, participant1, participant2, participant3 } = await loadFixture(deployGameManagerFixture);
+
+      // Step 1 Create Game
+      const gameId = 123456;
+      const prize = 50;
+      const value = 100;
+
+      await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
+
+      // Step 2 Publish result
+      const winners = [participant1.address, participant2.address]
+      await gameManager.connect(trustedManager).publishGameResult(gameId, winners)
+
+      // Step 3 Claim prize
+      const winnersBalanceBefore = await participant1.getBalance();
+
+      await gameManager.connect(participant1).claimPrize(gameId)
+
+      const winnersBalanceAfter = await participant1.getBalance();
+
+      expect(winnersBalanceBefore).to.be.lessThan(winnersBalanceAfter);
+
+      const prizeOnChain = await gameManager.prizeGameWinner(gameId, participant1.address);
+
+      expect(prizeOnChain).to.be.lessThanOrEqual(prize);
+
+    });
+
+    it("A loser shouldn't be able to claim prize ", async function () {
+      const { gameManager, trustedManager, gameCreator, participant1, participant2, participant3 } = await loadFixture(deployGameManagerFixture);
+
+      // Step 1 Create Game
+      const gameId = 123456;
+      const prize = 50;
+      const value = 100;
+
+      await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
+
+      // Step 2 Publish result
+      const winners = [participant1.address, participant2.address]
+      await gameManager.connect(trustedManager).publishGameResult(gameId, winners)
+
+      // Step 3 Claim prize
+      await expect(gameManager.connect(participant3).claimPrize(gameId))
+          .to.be
+          .revertedWithCustomError(gameManager, 'NoPrizeOrAlreadyClaimed');
+
+
+    });
+
+    it("A game creator should be able to airdrop a prize to a winner", async function () {
+      const { gameManager, trustedManager, gameCreator, participant1, participant2, participant3 } = await loadFixture(deployGameManagerFixture);
+
+      // Step 1 Create Game
+      const gameId = 123456;
+      const prize = 50;
+      const value = 100;
+
+      await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
+
+      // Step 2 Publish result
+      const winners = [participant1.address, participant2.address]
+      await gameManager.connect(trustedManager).publishGameResult(gameId, winners)
+
+      // Step 3 Claim prize
+      const winnersBalanceBefore = await participant2.getBalance();
+
+      await gameManager.connect(gameCreator).airdropPrize(gameId, participant2.address)
+
+      const winnersBalanceAfter = await participant2.getBalance();
+
+      expect(winnersBalanceBefore).to.be.lessThan(winnersBalanceAfter);
+
+      const prizeOnChain = await gameManager.prizeGameWinner(gameId, participant2.address);
+
+      expect(prizeOnChain).to.be.lessThanOrEqual(prize);
+
+    });
+
+    it("A game creator shouldn't be able to airdrop a prize to a random address", async function () {
+      const { gameManager, trustedManager, gameCreator, participant1, participant2, participant3 } = await loadFixture(deployGameManagerFixture);
+
+      // Step 1 Create Game
+      const gameId = 123456;
+      const prize = 50;
+      const value = 100;
+
+      await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
+
+      // Step 2 Publish result
+      const winners = [participant1.address, participant2.address]
+      await gameManager.connect(trustedManager).publishGameResult(gameId, winners)
+
+      // Step 3 Claim prize
+      await expect(gameManager.connect(gameCreator).airdropPrize(gameId, participant3.address))
+          .to.be
+          .revertedWithCustomError(gameManager, 'NoPrizeOrAlreadyClaimed');
+      
+    });
+  
+    it("A random address shouldn't be able to airdrop prize ", async function () {
+      const { gameManager, trustedManager, gameCreator, participant1, participant2, participant3 } = await loadFixture(deployGameManagerFixture);
+
+      // Step 1 Create Game
+      const gameId = 123456;
+      const prize = 50;
+      const value = 100;
+
+      await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
+
+      // Step 2 Publish result
+      const winners = [participant1.address, participant2.address]
+      await gameManager.connect(trustedManager).publishGameResult(gameId, winners)
+
+      // Step 3 Claim prize
+      await expect(gameManager.connect(participant3).airdropPrize(gameId, participant3.address))
+          .to.be
+          .revertedWithCustomError(gameManager, 'Unauthorized');
+
+    });
 
   });
 
@@ -72,12 +235,12 @@ describe("GameManager", function () {
 
       await expect(gameManager.connect(gameCreator).createGame(gameId, prize, { value }))
         .to.emit(gameManager, "GameCreated")
-        .withArgs(gameId, prize, prize, gameCreator);
+        .withArgs(gameId, prize, value, gameCreator.address);
     });
 
     it("Should emit an event on game results publishing", async function () {
 
-        const { gameManager, gameCreator, participant1, participant2, participant3 } = await loadFixture(
+        const { gameManager, gameCreator, trustedManager, participant1, participant2, participant3 } = await loadFixture(
           deployGameManagerFixture
         );
   
@@ -94,16 +257,18 @@ describe("GameManager", function () {
           participant3.address
         ]
   
-        await gameManager.connect(gameCreator).publishGameResult(gameId, winners)
-  
-        await expect(gameManager.claimPrize(gameId))
+        await expect(
+            gameManager
+              .connect(trustedManager)
+              .publishGameResult(gameId, winners)
+          )
           .to.emit(gameManager, "GameResult")
           .withArgs(gameId);
 
     });
 
     it("Should emit an event on winners' prize claim", async function () {
-      const { gameManager, gameCreator, participant1 } = await loadFixture(
+      const { gameManager, trustedManager, gameCreator, participant1 } = await loadFixture(
         deployGameManagerFixture
       );
 
@@ -118,11 +283,15 @@ describe("GameManager", function () {
         participant1.address
       ]
 
-      await gameManager.connect(gameCreator).publishGameResult(gameId, winners)
+      await gameManager.connect(trustedManager).publishGameResult(gameId, winners)
 
-      await expect(gameManager.claimPrize(gameId))
+      await expect(
+          gameManager
+            .connect(participant1)
+            .claimPrize(gameId)
+          )
         .to.emit(gameManager, "PrizeClaimed")
-        .withArgs(prize, participant1);
+        .withArgs(prize, participant1.address);
     });
 
   });
