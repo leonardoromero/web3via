@@ -31,7 +31,7 @@ import type {
 export interface GameManagerInterface extends utils.Interface {
   functions: {
     "NFT()": FunctionFragment;
-    "airdropPrize(uint256,address)": FunctionFragment;
+    "airdropPrize(uint256)": FunctionFragment;
     "changeNFTAddress(address)": FunctionFragment;
     "changeTrustedManager(address)": FunctionFragment;
     "claimPrize(uint256)": FunctionFragment;
@@ -63,7 +63,7 @@ export interface GameManagerInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "NFT", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "airdropPrize",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "changeNFTAddress",
@@ -141,7 +141,7 @@ export interface GameManagerInterface extends utils.Interface {
   ): Result;
 
   events: {
-    "GameCreated(uint256,uint256,uint256,address)": EventFragment;
+    "GameCreated(uint256,uint256,uint256)": EventFragment;
     "GameResult(uint256)": EventFragment;
     "PrizeClaimed(uint256,address)": EventFragment;
   };
@@ -155,10 +155,9 @@ export interface GameCreatedEventObject {
   gameId: BigNumber;
   prize: BigNumber;
   balance: BigNumber;
-  owner: string;
 }
 export type GameCreatedEvent = TypedEvent<
-  [BigNumber, BigNumber, BigNumber, string],
+  [BigNumber, BigNumber, BigNumber],
   GameCreatedEventObject
 >;
 
@@ -213,7 +212,6 @@ export interface GameManager extends BaseContract {
 
     airdropPrize(
       gameId: PromiseOrValue<BigNumberish>,
-      _winner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -252,11 +250,7 @@ export interface GameManager extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, string] & {
-        balance: BigNumber;
-        prize: BigNumber;
-        owner: string;
-      }
+      [BigNumber, BigNumber] & { balance: BigNumber; prize: BigNumber }
     >;
 
     prizeGameWinner(
@@ -278,7 +272,6 @@ export interface GameManager extends BaseContract {
 
   airdropPrize(
     gameId: PromiseOrValue<BigNumberish>,
-    _winner: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -316,13 +309,7 @@ export interface GameManager extends BaseContract {
   games(
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, string] & {
-      balance: BigNumber;
-      prize: BigNumber;
-      owner: string;
-    }
-  >;
+  ): Promise<[BigNumber, BigNumber] & { balance: BigNumber; prize: BigNumber }>;
 
   prizeGameWinner(
     gameId: PromiseOrValue<BigNumberish>,
@@ -343,7 +330,6 @@ export interface GameManager extends BaseContract {
 
     airdropPrize(
       gameId: PromiseOrValue<BigNumberish>,
-      _winner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -382,11 +368,7 @@ export interface GameManager extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, BigNumber, string] & {
-        balance: BigNumber;
-        prize: BigNumber;
-        owner: string;
-      }
+      [BigNumber, BigNumber] & { balance: BigNumber; prize: BigNumber }
     >;
 
     prizeGameWinner(
@@ -405,17 +387,15 @@ export interface GameManager extends BaseContract {
   };
 
   filters: {
-    "GameCreated(uint256,uint256,uint256,address)"(
+    "GameCreated(uint256,uint256,uint256)"(
       gameId?: null,
       prize?: null,
-      balance?: null,
-      owner?: null
+      balance?: null
     ): GameCreatedEventFilter;
     GameCreated(
       gameId?: null,
       prize?: null,
-      balance?: null,
-      owner?: null
+      balance?: null
     ): GameCreatedEventFilter;
 
     "GameResult(uint256)"(gameId?: null): GameResultEventFilter;
@@ -433,7 +413,6 @@ export interface GameManager extends BaseContract {
 
     airdropPrize(
       gameId: PromiseOrValue<BigNumberish>,
-      _winner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -493,7 +472,6 @@ export interface GameManager extends BaseContract {
 
     airdropPrize(
       gameId: PromiseOrValue<BigNumberish>,
-      _winner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
