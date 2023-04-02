@@ -10,8 +10,12 @@ const Leaderboard = () => {
 	const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false)
 	const [buttonText, setButonText] = useState('claim prize')
 	const [, setTxHash] = useState('')
-	const urlSearchParams = new URLSearchParams(window.location.search)
-	const { gameId } = Object.fromEntries(urlSearchParams.entries())
+  let gameId: string = '';
+  if (typeof window !== "undefined") {
+    const urlSearchParams = new URLSearchParams(window.location.search)
+    const params = Object.fromEntries(urlSearchParams.entries());
+	  gameId = params.gameId;
+  }
 	setTimeout(() => {
 		setIsLeaderboardVisible(true)
 	}, 2500)
