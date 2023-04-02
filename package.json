@@ -10,7 +10,6 @@
 	},
 	"dependencies": {
     "@openzeppelin/contracts": "^4.8.2",
-    "ethers": "^5.7.0",
 		"@nextui-org/react": "^1.0.0-beta.12",
 		"@types/node": "18.15.11",
 		"@types/react": "18.0.31",
