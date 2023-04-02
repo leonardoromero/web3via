@@ -10,14 +10,15 @@ interface IERC721Mintable is IERC721 {
 
 error Unauthorized();
 
-error InvalidPrize(); // 'Prize for each winner should be equal or less than the total prize'
+error InvalidPrize();
 
 error InsuficientGameBalance();
 
 error NoPrizeOrAlreadyClaimed();
 
 /** 
- * @title Web3via GameManager
+ * @title Triwiz GameManager
+ * @author Santiago Quinteros (santiago@buildingideas.io)
  */
 contract GameManager {
 

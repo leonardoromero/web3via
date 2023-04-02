@@ -7,7 +7,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 error Unauthorized();
-
+/** 
+ * @title NFT
+ * @author Santiago Quinteros (santiago@buildingideas.io)
+ */
 contract NFT is ERC721, ERC721Enumerable, Ownable {
   using Counters for Counters.Counter;
 
