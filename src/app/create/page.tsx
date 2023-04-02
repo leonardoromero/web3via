@@ -76,7 +76,7 @@ const Create = () => {
 					</label>
 					<div className={styles.answerInputs}>
 						<label className={styles.checkboxContainer}>
-							<input type="checkbox" checked />
+							<input type="checkbox" checked/>
 							<span className={styles.checkboxCheckmark} />
 						</label>
 						<input
@@ -135,7 +135,7 @@ const Create = () => {
 					</label>
 					<div className={styles.answerInputs}>
 						<label className={styles.checkboxContainer}>
-							<input type="checkbox" checked />
+							<input type="checkbox" checked/>
 							<span className={styles.checkboxCheckmark} />
 						</label>
 						<input

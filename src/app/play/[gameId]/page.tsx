@@ -1,9 +1,11 @@
 'use client'
 import { useState } from 'react'
 import Image from 'next/image'
-import styles from './play.module.scss'
+import { useRouter } from 'next/navigation'
 
-import clock from '../../../../public/sand-clock.svg'
+import sandClock from '../../../../public/sand-clock.svg'
+import styles from './play.module.scss'
+import { setTimeout } from 'timers'
 interface IGameProps {
 	params: {
 		gameId: number
@@ -15,47 +17,48 @@ const Game = ({ params: { gameId } }: IGameProps) => {
 	setTimeout(() => {
 		setIsGameReady(true)
 	}, 1500)
+	const router = useRouter()
 
 	if (isGameReady)
 		return (
 			<div className={styles.play}>
 				<div className={styles.header}>
+					{' '}
 					<p>Question 1</p>
-					<h4>Who created Bitcoin?</h4>
+					<h4>Who created Bitcoin</h4>
 				</div>
 				<div className={styles.content}>
 					<div className={styles.answer}>
-						<label htmlFor="question-2-answer-1" className={styles.answerLabel}>
-							Answer 1
-						</label>
 						<div className={styles.answerInputs}>
 							<label className={styles.checkboxContainer}>
-								<input type="checkbox" />
+								<input
+									type="checkbox"
+									onClick={() => router.push('/leaderboard')}
+								/>
 								<span className={styles.checkboxCheckmark} />
 							</label>
-							Satoshi Nakamoto
+							<p>Satoshi Nakamoto</p>
 						</div>
 					</div>
 					<div className={styles.answer}>
-						<label htmlFor="question-2-answer-2" className={styles.answerLabel}>
-							Answer 2
-						</label>
 						<div className={styles.answerInputs}>
 							<label className={styles.checkboxContainer}>
-								<input type="checkbox" />
+								<input
+									type="checkbox"
+									onClick={() => router.push('/leaderboard')}
+								/>
 								<span className={styles.checkboxCheckmark} />
 							</label>
-							Vitalik Buterin
+							<p>Vitalik Buterin</p>
 						</div>
 					</div>
 				</div>
 			</div>
 		)
-
 	return (
 		<div className={styles.loading}>
-			<Image src={clock} alt="sand clock" width={250} height={250} />
-			<h4>the game will start automatically when all players are ready</h4>
+			<Image src={sandClock} alt="loading image" width={250} height={250} />
+			<h4>the game will start when all players are ready</h4>
 		</div>
 	)
 }

@@ -1,0 +1,40 @@
+@import '../styles/common.module.scss';
+
+.loading {
+	height: 96vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	h4 {
+		@extend .heading-4;
+		text-align: center;
+		margin-top: 3rem;
+	}
+}
+
+.leaderboard {
+	height: 96vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+
+	h4 {
+		@extend .heading-4;
+		margin-bottom: 3rem;
+	}
+
+	h3 {
+		@extend .heading-3;
+		margin-top: 4rem;
+	}
+
+	.button {
+		position: absolute;
+		bottom: 5rem;
+		width: 25rem;
+	}
+}
