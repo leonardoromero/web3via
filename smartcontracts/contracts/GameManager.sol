@@ -10,21 +10,21 @@ interface IERC721Mintable is IERC721 {
 
 error Unauthorized();
 
-error InvalidPrize(); // 'Prize for each winner should be equal or less than the total prize'
+error InvalidPrize();
 
 error InsuficientGameBalance();
 
 error NoPrizeOrAlreadyClaimed();
 
 /** 
- * @title Web3via GameManager
+ * @title Triwiz GameManager
+ * @author Santiago Quinteros (santiago@buildingideas.io)
  */
 contract GameManager {
 
   struct Game {
     uint256 balance;
     uint256 prize;
-    address owner;
     address[] winners;
     mapping(address => uint256) winnersBalance;
   }
@@ -40,13 +40,6 @@ contract GameManager {
 
   modifier onlyTrustedManager() {
     if(msg.sender != trustedManager) {
-      revert Unauthorized();
-    }
-    _;
-  }
-
-  modifier onlyGameOwner(uint256 gameId) {
-    if(msg.sender != games[gameId].owner) {
       revert Unauthorized();
     }
     _;
@@ -74,7 +67,7 @@ contract GameManager {
     emit GameResult(gameId);
   }
 
-  event GameCreated(uint256 gameId, uint256 prize, uint256 balance, address owner);
+  event GameCreated(uint256 gameId, uint256 prize, uint256 balance);
 
   function createGame(uint256 gameId, uint256 prize) public payable {
 
@@ -82,11 +75,10 @@ contract GameManager {
       revert InvalidPrize();
     }
 
-    games[gameId].owner = msg.sender;
     games[gameId].prize = prize;
     games[gameId].balance = msg.value;
 
-    emit GameCreated(gameId, prize, msg.value, msg.sender);
+    emit GameCreated(gameId, prize, msg.value);
 
   }
 
@@ -96,8 +88,10 @@ contract GameManager {
     _sendPrize(gameId, msg.sender);
   }
 
-  function airdropPrize(uint256 gameId, address _winner) public onlyGameOwner(gameId) {
-    _sendPrize(gameId, _winner);
+  function airdropPrize(uint256 gameId) public onlyTrustedManager {
+    for (uint256 i = 0 ; i < games[gameId].winners.length; ++i) {
+      _sendPrize(gameId, games[gameId].winners[i]);
+    }
   }
 
   function _sendPrize(uint256 gameId, address winner) private {

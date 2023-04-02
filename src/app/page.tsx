@@ -7,14 +7,14 @@ import { useAccount } from 'wagmi'
 import styles from './home.module.scss'
 
 export default function Home(): ReactElement {
-	const [gameId, setGameId] = useState(0)
+	const [gameId, setGameId] = useState('')
 	const [isWarningVisible, setIsWarningVisible] = useState(false)
 	const { isConnected } = useAccount()
 
-	const gameLink: string = gameId !== 0 ? `/play/${gameId}` : '/'
+	const gameLink: string = gameId !== '' ? `/play/${gameId}` : '/'
 
 	const handleClick = (): void => {
-		if (gameId === 0) setIsWarningVisible(true)
+		if (gameId === '') setIsWarningVisible(true)
 	}
 
 	if (isConnected) {
@@ -26,10 +26,10 @@ export default function Home(): ReactElement {
 					<div className={styles.play}>
 						<input
 							placeholder="enter a game id"
-							type="number"
+							type="string"
 							required
-							onChange={(e) => setGameId(+e.target.value)}
-							value={gameId !== 0 ? gameId : ''}
+							onChange={(e) => setGameId(e.target.value)}
+							value={gameId !== '' ? gameId : ''}
 						/>
 						<Link href={gameLink} className={styles.link} onClick={handleClick}>
 							GO!

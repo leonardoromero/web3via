@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 import styles from './leaderboard.module.scss'
@@ -8,9 +8,30 @@ import confeti from '../../../public/confeti.png'
 
 const Leaderboard = () => {
 	const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false)
+	const [buttonText, setButonText] = useState('claim prize')
+	const [txHash, setTxHash] = useState('')
 	setTimeout(() => {
 		setIsLeaderboardVisible(true)
 	}, 2500)
+	useEffect(() => {
+		const init = async () => {
+			const body = { gameId: 123 }
+			const response: Response = await fetch('/api/games', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(body),
+			})
+			console.log(response)
+			setTxHash(JSON.stringify(response))
+		}
+		init()
+	}, [])
+
+	async function handleButton() {
+		setButonText('PLEASE WAIT')
+	}
 
 	if (isLeaderboardVisible)
 		return (
@@ -18,7 +39,9 @@ const Leaderboard = () => {
 				<h4>congrats!</h4>
 				<Image src={confeti} alt="confeti image" width={200} height={200} />
 				<h3>1º place</h3>
-				<button className={styles.button}>claim prize</button>
+				<button className={styles.button} onClick={handleButton}>
+					{buttonText}
+				</button>
 			</div>
 		)
 

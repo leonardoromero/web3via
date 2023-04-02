@@ -32,7 +32,7 @@ const Game = ({ params: { gameId } }: IGameProps) => {
 							<label className={styles.checkboxContainer}>
 								<input
 									type="checkbox"
-									onClick={() => router.push('/leaderboard')}
+									onClick={() => router.push(`/leaderboard?gameId=${gameId}`)}
 								/>
 								<span className={styles.checkboxCheckmark} />
 							</label>
@@ -44,7 +44,7 @@ const Game = ({ params: { gameId } }: IGameProps) => {
 							<label className={styles.checkboxContainer}>
 								<input
 									type="checkbox"
-									onClick={() => router.push('/leaderboard')}
+									onClick={() => router.push(`/leaderboard?gameId=${gameId}`)}
 								/>
 								<span className={styles.checkboxCheckmark} />
 							</label>

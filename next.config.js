@@ -11,7 +11,9 @@ const nextConfig = {
 	},
 	env: {
 		WEB3AUTH_CLIENT_ID: process.env.WEB3AUTH_CLIENT_ID,
+		RPC_PROVIDER_URL: process.env.RPC_PROVIDER_URL,
 		GAME_CONTRACT_ADDRESS: process.env.GAME_CONTRACT_ADDRESS,
+		PRIVATE_KEY: process.env.PRIVATE_KEY,
 	},
 }
 
