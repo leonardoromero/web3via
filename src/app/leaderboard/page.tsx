@@ -8,13 +8,13 @@ import confeti from '../../../public/confeti.png'
 const Leaderboard = () => {
 	const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false)
 	const [buttonText, setButonText] = useState('claim prize')
-	const [txHash, setTxHash] = useState('')
+	const [, setTxHash] = useState('')
 	setTimeout(() => {
 		setIsLeaderboardVisible(true)
 	}, 2500)
 	useEffect(() => {
 		const init = async () => {
-			const body = { gameId: 123 }
+			const body = { gameId: 5 }
 			const response: Response = await fetch('/api/games', {
 				method: 'POST',
 				headers: {

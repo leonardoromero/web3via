@@ -17,7 +17,7 @@ const Create = () => {
 		address: process.env.GAME_CONTRACT_ADDRESS as `0x${string}`,
 		abi: GameManager.abi,
 		functionName: 'createGame',
-		args: [5, 1],
+		args: [6, 1],
 		overrides: {
 			value: 1,
 		},

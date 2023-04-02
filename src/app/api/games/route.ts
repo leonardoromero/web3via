@@ -33,6 +33,8 @@ export async function POST(req: Request, res: Response) {
 		])
 		await publishTx.wait()
 		const airdropTx = await contract.airdropPrize(data.gameId)
+		await airdropTx.wait()
+
 		return new Response(airdropTx.hash)
 	} catch (error) {
 		console.error(error)
