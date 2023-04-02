@@ -17,11 +17,11 @@ npm run test
 ### Compile
 
 ```
-npm run contracts:compile
+npm run sc:compile
 ```
 
 ### Deployment (goerli)
 
 ```
-npm run contracts:deploy
+npm run sc:deploy
 ```
