@@ -10,7 +10,7 @@ describe("GameManager", function () {
     const [deployer, trustedManager, gameCreator, participant1, participant2, participant3] = await ethers.getSigners();
 
     const GameManagerFactory = await ethers.getContractFactory("GameManager");
-    const gameManager = await GameManagerFactory.deploy(trustedManager);
+    const gameManager = await GameManagerFactory.deploy(trustedManager.address);
 
     return { gameManager, deployer, trustedManager, gameCreator, participant1, participant2, participant3 };
   }
@@ -50,7 +50,7 @@ describe("GameManager", function () {
       // We use gameManager.connect() to send a transaction from another account
       await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
 
-      const game = gameCreator.games(gameId);
+      const game = await gameManager.games(gameId);
 
       await expect(game.balance).to.equal(value);
       await expect(game.owner).to.equal(gameCreator);
@@ -89,9 +89,9 @@ describe("GameManager", function () {
         await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
   
         const winners = [
-          participant1,
-          participant2,
-          participant3
+          participant1.address,
+          participant2.address,
+          participant3.address
         ]
   
         await gameManager.connect(gameCreator).publishGameResult(gameId, winners)
@@ -115,7 +115,7 @@ describe("GameManager", function () {
       await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
 
       const winners = [
-        participant1
+        participant1.address
       ]
 
       await gameManager.connect(gameCreator).publishGameResult(gameId, winners)
