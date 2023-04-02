@@ -1,7 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import styles from './leaderboard.module.scss'
 import Image from 'next/image'
+
+import styles from './leaderboard.module.scss'
 import competition from '../../../public/competition.svg'
 import confeti from '../../../public/confeti.png'
 

@@ -1,7 +1,7 @@
 @import '../../styles/common.module.scss';
 
 .loading {
-	height: 96vh;
+	height: 94vh;
 	margin: 0 auto;
 	display: flex;
 	align-items: center;
@@ -16,9 +16,9 @@
 }
 
 .play {
-	height: 96vh;
+	height: 100vh;
 	color: $base-grey;
-	margin: 3rem auto;
+	margin: 0 auto;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
