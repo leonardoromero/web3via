@@ -1,4 +1,3 @@
-import { NextApiRequest, NextApiResponse } from 'next'
 import GameManagerJSON from '../../../../smartcontracts/artifacts/contracts/GameManager.sol/GameManager.json'
 import { GameManager } from '../../../../smartcontracts/typechain-types'
 const { ethers } = require('ethers')
@@ -32,7 +31,8 @@ export async function POST(req: Request, res: Response) {
 		const tx = await contract.publishGameResult(data.gameId, [
 			'0x7a12C99F9C695cC547a8f2af9E53f8A978fc6d44',
 		])
-		await tx.wait()
+		console.log(tx)
+		//await tx.wait()
 		return new Response(
 			'El resultado del juego ha sido publicado correctamente'
 		)

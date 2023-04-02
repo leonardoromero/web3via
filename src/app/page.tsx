@@ -22,6 +22,8 @@ export default function Home(): ReactElement {
 	if (isConnected) {
 		return (
 			<div className={styles.home}>
+				<div className="title">Connected to {connector?.name}</div>
+				<div>{address}</div>
 				<h1>triwiz</h1>
 				<p>take your prize home instantly</p>
 				<div className={styles.actions}>
@@ -33,8 +35,6 @@ export default function Home(): ReactElement {
 					</Link>
 					<input placeholder="enter an alias" />
 					<div className="main">
-						<div className="title">Connected to {connector?.name}</div>
-						<div>{address}</div>
 						<button className="card" onClick={disconnect as any}>
 							Disconnect
 						</button>

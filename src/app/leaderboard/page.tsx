@@ -7,9 +7,16 @@ import confeti from '../../../public/confeti.png'
 
 const Leaderboard = () => {
 	const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false)
+	const [buttonText, setButonText] = useState('claim prize')
 	setTimeout(() => {
 		setIsLeaderboardVisible(true)
 	}, 2500)
+
+	async function handleButton() {
+		const response = await fetch('/api/games', { method: 'POST' })
+		const data = await response.json()
+		setButonText(data.message)
+	}
 
 	if (isLeaderboardVisible)
 		return (
@@ -17,7 +24,9 @@ const Leaderboard = () => {
 				<h4>congrats!</h4>
 				<Image src={confeti} alt="confeti image" width={200} height={200} />
 				<h3>1º place</h3>
-				<button className={styles.button}>claim prize</button>
+				<button className={styles.button} onClick={handleButton}>
+					{buttonText}
+				</button>
 			</div>
 		)
 

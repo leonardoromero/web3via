@@ -23,18 +23,6 @@ const { chains, provider, webSocketProvider } = configureChains(
 const client = createClient({
 	autoConnect: true,
 	connectors: [
-		new CoinbaseWalletConnector({
-			chains,
-			options: {
-				appName: 'wagmi',
-			},
-		}),
-		new WalletConnectConnector({
-			chains,
-			options: {
-				qrcode: true,
-			},
-		}),
 		new InjectedConnector({
 			chains,
 			options: {
