@@ -10,7 +10,6 @@ const History = (): ReactElement => {
 		const today = new Date()
 		const dayOfTheGame = new Date(date)
 
-		// Discard the time and time-zone information.
 		const utc1 = Date.UTC(
 			today.getFullYear(),
 			today.getMonth(),
@@ -36,6 +35,7 @@ const History = (): ReactElement => {
 			)
 		return <td className={styles.dimmed}>nope</td>
 	}
+	
 	return (
 		<div className={styles.history}>
 			<h1>triwiz</h1>
@@ -53,7 +53,7 @@ const History = (): ReactElement => {
 				</table>
 				{history.map((game) => (
 					<div key={game.date} className={styles.gameContainer}>
-						<Link href={`/history/${game.id}`} className={styles.game}>
+						<Link href="/history" className={styles.game}>
 							<div>{game.position}</div>
 							<div>{dateDiffInDays(game.date)}</div>
 							<div>{game.organizer}</div>

@@ -1,13 +1,16 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import styles from './create.module.scss'
+import { useRouter } from 'next/navigation'
 import {
 	usePrepareContractWrite,
 	useContractWrite,
 	useWaitForTransaction,
 } from 'wagmi'
 import GameManager from '../../../smartcontracts/artifacts/contracts/GameManager.sol/GameManager.json'
-import { useRouter } from 'next/navigation'
+import { v4 as uuidv4 } from 'uuid'
+
+
+import styles from './create.module.scss'
 
 const Create = () => {
 	const router = useRouter()
@@ -31,7 +34,7 @@ const Create = () => {
 	useEffect(() => {
 		console.log({ isLoading })
 		if (isLoading) {
-			setButtonText('CREATING GAME')
+			setButtonText('CREATING GAME...')
 			setTxHash(JSON.stringify(data?.hash))
 		}
 	}, [isLoading])
@@ -154,11 +157,9 @@ const Create = () => {
 					<input type="number" name="prize" id="prize" value="10" />
 					<select name="unit" id="unit">
 						<option value="">Please choose a crypto</option>
-						<option value="usdc" selected>
-							usdc
+						<option value="eth" selected>
+							eth
 						</option>
-						<option value="btc">btc</option>
-						<option value="eth">eth</option>
 					</select>
 				</div>
 				<div className={styles.prize}>
@@ -166,11 +167,9 @@ const Create = () => {
 					<input type="number" name="prize" id="prize" value="5" />
 					<select name="unit" id="unit">
 						<option value="">Please choose a crypto</option>
-						<option value="usdc" selected>
-							usdc
+						<option value="eth" selected>
+							eth
 						</option>
-						<option value="btc">btc</option>
-						<option value="eth">eth</option>
 					</select>
 				</div>
 				<div className={styles.prize}>
@@ -178,11 +177,9 @@ const Create = () => {
 					<input type="number" name="prize" id="prize" value="1" />
 					<select name="unit" id="unit">
 						<option value="">Please choose a crypto</option>
-						<option value="usdc" selected>
-							usdc
+						<option value="eth" selected>
+							eth
 						</option>
-						<option value="btc">btc</option>
-						<option value="eth">eth</option>
 					</select>
 				</div>
 				<button className={styles.createButton} onClick={handleCreateGame}>

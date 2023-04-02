@@ -2,7 +2,7 @@
 
 .home {
 	color: $base-grey;
-	height: 96vh;
+	height: 94vh;
 	background: url('../../public/home.svg') no-repeat bottom;
 	display: flex;
 	flex-direction: column;
@@ -24,6 +24,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
+		width: 350px;
 
 		.warning {
 			font-size: 1.25rem;
@@ -43,6 +44,7 @@
 
 		input {
 			@extend .input;
+			width: 100%;
 		}
 
 		.play {

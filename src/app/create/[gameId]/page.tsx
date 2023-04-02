@@ -1,8 +1,8 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 import styles from './gameCreated.module.scss'
 import successIllustration from '../../../../public/tick.svg'
-import Link from 'next/link'
 
 interface IGameProps {
 	params: {

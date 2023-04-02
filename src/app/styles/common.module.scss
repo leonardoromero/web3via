@@ -29,16 +29,14 @@
 .link {
 	color: $base-grey;
 	font-size: 2rem;
+	display:flex;
+	align-items: center;
 }
 
 .links {
 	display: flex;
 	list-style: none;
 	gap: 1rem;
-}
-
-.header {
-	height: 4vh;
 }
 
 .input {
@@ -69,5 +67,38 @@
 	&:active {
 		transform: translate(9px, 9px);
 		box-shadow: none;
+	}
+}
+
+.navigation {
+	height: 6vh;
+	background-color: $accent-orange;
+	display: flex;
+	justify-content: space-evenly;
+	position: fixed;
+	width: 400px;
+
+	ul {
+		display: flex;
+		justify-content: space-evenly;
+		width: 100%;
+
+		li {
+			display: flex;
+			align-items: center;
+		}
+
+		.address {
+			font-size: 2rem;
+			color: $base-grey;
+		}
+	}
+
+	button {
+		all: unset;
+		font-size: 3rem;
+		display: flex;
+		align-items: center;
+		color: $base-blue;
 	}
 }
