@@ -6,7 +6,7 @@ import styles from './leaderboard.module.scss'
 import competition from '../../../public/competition.svg'
 import confeti from '../../../public/confeti.png'
 
-const Leaderboard = () => {
+const Leaderboard = ({ params: { gameId } }: any) => {
 	const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false)
 	const [buttonText, setButonText] = useState('claim prize')
 	const [, setTxHash] = useState('')
@@ -15,7 +15,7 @@ const Leaderboard = () => {
 	}, 2500)
 	useEffect(() => {
 		const init = async () => {
-			const body = { gameId: 5 }
+			const body = { gameId }
 			const response: Response = await fetch('/api/games', {
 				method: 'POST',
 				headers: {

@@ -7,8 +7,6 @@ import {
 	useWaitForTransaction,
 } from 'wagmi'
 import GameManager from '../../../smartcontracts/artifacts/contracts/GameManager.sol/GameManager.json'
-import { v4 as uuidv4 } from 'uuid'
-
 
 import styles from './create.module.scss'
 
@@ -16,11 +14,14 @@ const Create = () => {
 	const router = useRouter()
 	const [buttonText, setButtonText] = useState('CREATE')
 	const [txHash, setTxHash] = useState('')
+	const timestamp = Date.now()
+	const timestampString = timestamp.toString()
+	const middleNumbers = timestampString.substring(2, 7)
 	const { config } = usePrepareContractWrite({
 		address: process.env.GAME_CONTRACT_ADDRESS as `0x${string}`,
 		abi: GameManager.abi,
 		functionName: 'createGame',
-		args: [6, 1],
+		args: [middleNumbers, 1],
 		overrides: {
 			value: 1,
 		},
@@ -42,7 +43,7 @@ const Create = () => {
 	useEffect(() => {
 		if (isSuccess) {
 			setButtonText('CREATED')
-			router.push(`/create/${5}?txHash=${txHash}`)
+			router.push(`/create/${middleNumbers}?txHash=${txHash}`)
 		}
 	}, [isSuccess])
 
