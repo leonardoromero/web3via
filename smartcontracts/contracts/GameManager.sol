@@ -2,6 +2,12 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
+interface IERC721Mintable is IERC721 {
+  function mint(address to) external;
+}
+
 error Unauthorized();
 
 error InvalidPrize(); // 'Prize for each winner should be equal or less than the total prize'
@@ -24,10 +30,11 @@ contract GameManager {
   }
 
   address public trustedManager;
+  IERC721Mintable public NFT;
 
   mapping(uint256 => Game) public games;
 
-  constructor( address _trustedManager ) {
+  constructor( address _trustedManager) {
     trustedManager = _trustedManager;
   }
 
@@ -43,6 +50,10 @@ contract GameManager {
       revert Unauthorized();
     }
     _;
+  }
+
+  function changeNFTAddress(address newNFTAddress) public onlyTrustedManager {
+    NFT = IERC721Mintable(newNFTAddress);
   }
 
   function changeTrustedManager(address newManager) public onlyTrustedManager {
@@ -106,6 +117,10 @@ contract GameManager {
     (bool success, ) = (payable(address(winner))).call{ value: winnersPrize }('');
 
     require(success);
+
+    if (address(NFT) != address(0)) {
+      NFT.mint(winner);
+    }
 
     emit PrizeClaimed(winnersPrize, winner);
 
