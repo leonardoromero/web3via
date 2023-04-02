@@ -9,18 +9,18 @@ import {
 import GameManager from '../../../smartcontracts/artifacts/contracts/GameManager.sol/GameManager.json'
 import { v4 as uuidv4 } from 'uuid'
 
+
 import styles from './create.module.scss'
 
 const Create = () => {
 	const router = useRouter()
 	const [buttonText, setButtonText] = useState('CREATE')
 	const [txHash, setTxHash] = useState('')
-	const gameId = parseInt(uuidv4().substring(0, 5), 16)
 	const { config } = usePrepareContractWrite({
 		address: process.env.GAME_CONTRACT_ADDRESS as `0x${string}`,
 		abi: GameManager.abi,
 		functionName: 'createGame',
-		args: [gameId, 1],
+		args: [5, 1],
 		overrides: {
 			value: 1,
 		},
@@ -42,7 +42,7 @@ const Create = () => {
 	useEffect(() => {
 		if (isSuccess) {
 			setButtonText('CREATED')
-			router.push(`/create/${gameId}?txHash=${txHash}`)
+			router.push(`/create/${5}?txHash=${txHash}`)
 		}
 	}, [isSuccess])
 
