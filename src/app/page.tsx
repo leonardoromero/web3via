@@ -9,10 +9,12 @@ export default function Home(): ReactElement {
 	const [gameId, setGameId] = useState(0)
 	const [isWarningVisible, setIsWarningVisible] = useState(false)
 	const gameLink: string = gameId !== 0 ? `/play/${gameId}` : '/'
+
 	const { address, connector, isConnected } = useAccount()
 	const { connect, connectors, error, isLoading, pendingConnector } =
 		useConnect()
 	const { disconnect } = useDisconnect()
+
 	const handleClick = (): void => {
 		if (gameId === 0) setIsWarningVisible(true)
 	}
@@ -20,7 +22,7 @@ export default function Home(): ReactElement {
 	if (isConnected) {
 		return (
 			<div className={styles.home}>
-				<h1>web3via</h1>
+				<h1>triwiz</h1>
 				<p>take your prize home instantly</p>
 				<div className={styles.actions}>
 					<Link href="/create" className={styles.link}>
@@ -62,7 +64,7 @@ export default function Home(): ReactElement {
 
 	return (
 		<div className={styles.home}>
-			<h1>web3via</h1>
+			<h1>triwiz</h1>
 			<p>take your prize home instantly</p>
 			<div className="main">
 				{connectors.map((connector) => (

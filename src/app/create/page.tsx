@@ -7,8 +7,10 @@ import {
 	useWaitForTransaction,
 } from 'wagmi'
 import GameManager from '../../../smartcontracts/artifacts/contracts/GameManager.sol/GameManager.json'
+import { useRouter } from 'next/navigation'
 
 const Create = () => {
+	const router = useRouter()
 	const [buttonText, setButtonText] = useState('CREATE')
 	const { config } = usePrepareContractWrite({
 		address: process.env.GAME_CONTRACT_ADDRESS as `0x${string}`,
@@ -36,7 +38,7 @@ const Create = () => {
 		if (isSuccess) {
 			const mockGameId = 252863
 			setButtonText('CREATED')
-			window.location.assign(`/create/${mockGameId}`)
+			router.push(`/create/${mockGameId}`)
 		}
 	}, [isSuccess])
 
@@ -74,7 +76,7 @@ const Create = () => {
 					</label>
 					<div className={styles.answerInputs}>
 						<label className={styles.checkboxContainer}>
-							<input type="checkbox" />
+							<input type="checkbox" checked />
 							<span className={styles.checkboxCheckmark} />
 						</label>
 						<input
@@ -133,7 +135,7 @@ const Create = () => {
 					</label>
 					<div className={styles.answerInputs}>
 						<label className={styles.checkboxContainer}>
-							<input type="checkbox" />
+							<input type="checkbox" checked />
 							<span className={styles.checkboxCheckmark} />
 						</label>
 						<input
