@@ -38,7 +38,7 @@ const History = (): ReactElement => {
 	}
 	return (
 		<div className={styles.history}>
-			<h1>web3via</h1>
+			<h1>triwiz</h1>
 			<p>past games</p>
 			<div className={styles.gamesList}>
 				<table>
