@@ -4,7 +4,6 @@ import { ethers } from "hardhat";
 
 describe("GameManager", function () {
   async function deployGameManagerFixture() {
-
     // Contracts are deployed using the first signer/account by default
     const [deployer, trustedManager, gameCreator, participant1, participant2, participant3] = await ethers.getSigners();
 
@@ -29,8 +28,9 @@ describe("GameManager", function () {
       const { gameManager } = await loadFixture(deployGameManagerFixture);
 
       const gameId = 123456; // some random number
-      const prize = 25;      // wei
-      const value = 1;       // wei
+
+      const prize = ethers.utils.parseUnits("25","ether")
+      const value = ethers.utils.parseUnits("1","ether")
 
       await expect(gameManager.createGame(gameId, prize, { value }))
         .to.be
@@ -43,8 +43,8 @@ describe("GameManager", function () {
       );  
 
       const gameId = 123456;  // some random number
-      const prize = 100;      // wei
-      const value = 100;      // wei
+      const prize = ethers.utils.parseUnits("1","ether")
+      const value = ethers.utils.parseUnits("1","ether")
 
       // We use gameManager.connect() to send a transaction from another account
       await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
@@ -65,8 +65,8 @@ describe("GameManager", function () {
       const { gameManager, trustedManager, gameCreator, participant1, participant2, participant3 } = await loadFixture(deployGameManagerFixture);
 
       const gameId = 123456;
-      const prize = 100;
-      const value = 100;
+      const prize = ethers.utils.parseUnits("1","ether");
+      const value = ethers.utils.parseUnits("1","ether");
 
 
       await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
@@ -104,8 +104,8 @@ describe("GameManager", function () {
 
       // Step 1 Create Game
       const gameId = 123456;
-      const prize = 50;
-      const value = 100;
+      const prize = ethers.utils.parseUnits("5","ether")
+      const value = ethers.utils.parseUnits("10","ether")
 
       await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
 
@@ -128,13 +128,42 @@ describe("GameManager", function () {
 
     });
 
+    it("A winner should receive an NFT ", async function () {
+      // Step 0 Setup NFT contract link to game manager contract
+      const { gameManager, trustedManager, gameCreator, participant1 } = await loadFixture(deployGameManagerFixture);
+      await gameManager.deployed();
+
+      const NFTFactory = await ethers.getContractFactory("NFT");
+      const nftContract = await NFTFactory.deploy('Web3Via', 'W3V', gameManager.address);
+      await gameManager.connect(trustedManager).changeNFTAddress(nftContract.address)
+
+      // Step 1 Create Game
+      const gameId = 123456;
+      const prize = ethers.utils.parseUnits("5","ether")
+      const value = ethers.utils.parseUnits("10","ether")
+
+      await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
+
+      // Step 2 Publish result
+      const winners = [participant1.address, ]
+      await gameManager.connect(trustedManager).publishGameResult(gameId, winners)
+
+      // Step 3 Claim prize
+      await gameManager.connect(participant1).claimPrize(gameId)
+
+      const nftBalance = await nftContract.balanceOf(participant1.address);
+
+      expect(nftBalance).to.equal(1);
+
+    });
+
     it("A loser shouldn't be able to claim prize ", async function () {
       const { gameManager, trustedManager, gameCreator, participant1, participant2, participant3 } = await loadFixture(deployGameManagerFixture);
 
       // Step 1 Create Game
       const gameId = 123456;
-      const prize = 50;
-      const value = 100;
+      const prize = ethers.utils.parseUnits("5","ether")
+      const value = ethers.utils.parseUnits("10","ether")
 
       await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
 
@@ -155,8 +184,8 @@ describe("GameManager", function () {
 
       // Step 1 Create Game
       const gameId = 123456;
-      const prize = 50;
-      const value = 100;
+      const prize = ethers.utils.parseUnits("5","ether")
+      const value = ethers.utils.parseUnits("10","ether")
 
       await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
 
@@ -184,8 +213,8 @@ describe("GameManager", function () {
 
       // Step 1 Create Game
       const gameId = 123456;
-      const prize = 50;
-      const value = 100;
+      const prize = ethers.utils.parseUnits("5","ether")
+      const value = ethers.utils.parseUnits("10","ether")
 
       await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
 
@@ -205,8 +234,8 @@ describe("GameManager", function () {
 
       // Step 1 Create Game
       const gameId = 123456;
-      const prize = 50;
-      const value = 100;
+      const prize = ethers.utils.parseUnits("5","ether")
+      const value = ethers.utils.parseUnits("10","ether")
 
       await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
 
@@ -230,8 +259,8 @@ describe("GameManager", function () {
       );
 
       const gameId = 123456; // some random number
-      const prize = 10;     // wei
-      const value = 30;     // wei
+      const prize = ethers.utils.parseUnits("1","ether")
+      const value = ethers.utils.parseUnits("3","ether")
 
       await expect(gameManager.connect(gameCreator).createGame(gameId, prize, { value }))
         .to.emit(gameManager, "GameCreated")
@@ -246,8 +275,8 @@ describe("GameManager", function () {
   
         const gameId = 123456; // some random number
   
-        const prize = 10;     // wei
-        const value = 30;     // wei
+        const prize = ethers.utils.parseUnits("1","ether")
+        const value = ethers.utils.parseUnits("3","ether")
   
         await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
   
@@ -274,8 +303,8 @@ describe("GameManager", function () {
 
       const gameId = 123456; // some random number
 
-      const prize = 10;     // wei
-      const value = 30;     // wei
+      const prize = ethers.utils.parseUnits("1","ether")
+      const value = ethers.utils.parseUnits("3","ether")
 
       await gameManager.connect(gameCreator).createGame(gameId, prize, { value })
 

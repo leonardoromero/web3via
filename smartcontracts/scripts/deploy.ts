@@ -10,6 +10,13 @@ async function main() {
 
   await gameManager.deployed();
 
+  const NFTFactory = await ethers.getContractFactory("NFT");
+  const nftInstance = await NFTFactory.deploy('Web3Via', 'W3V', gameManager.address);
+
+  await nftInstance.deployed();
+
+  await gameManager.changeNFTAddress(nftInstance.address)
+
   console.log(
     `Game Manager deployed with ${trustedManager} as trusted manager`
   );
