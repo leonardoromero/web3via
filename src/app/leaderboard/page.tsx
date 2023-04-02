@@ -6,10 +6,12 @@ import styles from './leaderboard.module.scss'
 import competition from '../../../public/competition.svg'
 import confeti from '../../../public/confeti.png'
 
-const Leaderboard = ({ params: { gameId } }: any) => {
+const Leaderboard = () => {
 	const [isLeaderboardVisible, setIsLeaderboardVisible] = useState(false)
 	const [buttonText, setButonText] = useState('claim prize')
 	const [, setTxHash] = useState('')
+	const urlSearchParams = new URLSearchParams(window.location.search)
+	const { gameId } = Object.fromEntries(urlSearchParams.entries())
 	setTimeout(() => {
 		setIsLeaderboardVisible(true)
 	}, 2500)

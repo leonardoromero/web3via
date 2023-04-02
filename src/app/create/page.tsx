@@ -16,7 +16,7 @@ const Create = () => {
 	const [txHash, setTxHash] = useState('')
 	const timestamp = Date.now()
 	const timestampString = timestamp.toString()
-	const middleNumbers = timestampString.substring(2, 7)
+	const middleNumbers = timestampString.substring(4, 9)
 	const { config } = usePrepareContractWrite({
 		address: process.env.GAME_CONTRACT_ADDRESS as `0x${string}`,
 		abi: GameManager.abi,
