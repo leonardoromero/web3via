@@ -1,12 +1,52 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './create.module.scss'
+import {
+	usePrepareContractWrite,
+	useContractWrite,
+	useWaitForTransaction,
+} from 'wagmi'
+import GameManager from '../../../smartcontracts/artifacts/contracts/GameManager.sol/GameManager.json'
 
 const Create = () => {
+	const [buttonText, setButtonText] = useState('CREATE')
+	const { config } = usePrepareContractWrite({
+		address: process.env.GAME_CONTRACT_ADDRESS as `0x${string}`,
+		abi: GameManager.abi,
+		functionName: 'createGame',
+		args: [1, 1],
+		overrides: {
+			value: 1,
+		},
+	})
+	const { data, write } = useContractWrite(config)
+	const { isLoading, isSuccess } = useWaitForTransaction({
+		hash: data?.hash,
+	})
+	console.log(write)
+
+	useEffect(() => {
+		console.log({ isLoading })
+		if (isLoading) {
+			setButtonText('CREATING GAME')
+		}
+	}, [isLoading])
+
+	useEffect(() => {
+		if (isSuccess) {
+			const mockGameId = 252863
+			setButtonText('CREATED')
+			window.location.assign(`/create/${mockGameId}`)
+		}
+	}, [isSuccess])
+
 	const handleCreateGame = (e: any) => {
 		e.preventDefault()
-		const mockGameId = 252863
-		window.location.assign(`/create/${mockGameId}`)
+
+		if (write) {
+			console.log({ write })
+			write()
+		}
 	}
 
 	return (
@@ -143,7 +183,7 @@ const Create = () => {
 					</select>
 				</div>
 				<button className={styles.createButton} onClick={handleCreateGame}>
-					create
+					{buttonText}
 				</button>
 			</form>
 		</div>
