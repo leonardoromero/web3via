@@ -48,10 +48,6 @@ const client = createClient({
 	webSocketProvider,
 })
 
-export const metadata = {
-	title: 'web3via',
-}
-
 const marmelad = Marmelad({
 	weight: '400',
 	subsets: ['latin'],
