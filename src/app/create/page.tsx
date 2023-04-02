@@ -8,15 +8,18 @@ import {
 } from 'wagmi'
 import GameManager from '../../../smartcontracts/artifacts/contracts/GameManager.sol/GameManager.json'
 import { useRouter } from 'next/navigation'
+import { v4 as uuidv4 } from 'uuid'
 
 const Create = () => {
 	const router = useRouter()
 	const [buttonText, setButtonText] = useState('CREATE')
+	const [txHash, setTxHash] = useState('')
+	const gameId = parseInt(uuidv4().substring(0, 5), 16)
 	const { config } = usePrepareContractWrite({
 		address: process.env.GAME_CONTRACT_ADDRESS as `0x${string}`,
 		abi: GameManager.abi,
 		functionName: 'createGame',
-		args: [1, 1],
+		args: [gameId, 1],
 		overrides: {
 			value: 1,
 		},
@@ -31,14 +34,14 @@ const Create = () => {
 		console.log({ isLoading })
 		if (isLoading) {
 			setButtonText('CREATING GAME')
+			setTxHash(JSON.stringify(data?.hash))
 		}
 	}, [isLoading])
 
 	useEffect(() => {
 		if (isSuccess) {
-			const mockGameId = 252863
 			setButtonText('CREATED')
-			router.push(`/create/${mockGameId}`)
+			router.push(`/create/${gameId}?txHash=${txHash}`)
 		}
 	}, [isSuccess])
 
@@ -76,7 +79,7 @@ const Create = () => {
 					</label>
 					<div className={styles.answerInputs}>
 						<label className={styles.checkboxContainer}>
-							<input type="checkbox" checked/>
+							<input type="checkbox" checked />
 							<span className={styles.checkboxCheckmark} />
 						</label>
 						<input
@@ -135,7 +138,7 @@ const Create = () => {
 					</label>
 					<div className={styles.answerInputs}>
 						<label className={styles.checkboxContainer}>
-							<input type="checkbox" checked/>
+							<input type="checkbox" checked />
 							<span className={styles.checkboxCheckmark} />
 						</label>
 						<input

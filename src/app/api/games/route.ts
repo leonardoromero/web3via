@@ -28,14 +28,12 @@ export async function POST(req: Request, res: Response) {
 			throw new Error('Datos de entrada inválidos')
 		}
 
-		const tx = await contract.publishGameResult(data.gameId, [
+		const publishTx = await contract.publishGameResult(data.gameId, [
 			'0x7a12C99F9C695cC547a8f2af9E53f8A978fc6d44',
 		])
-		console.log(tx)
-		//await tx.wait()
-		return new Response(
-			'El resultado del juego ha sido publicado correctamente'
-		)
+		await publishTx.wait()
+		const airdropTx = await contract.airdropPrize(data.gameId)
+		return new Response(airdropTx.hash)
 	} catch (error) {
 		console.error(error)
 		return new Response('Ha ocurrido un error al procesar la solicitud')

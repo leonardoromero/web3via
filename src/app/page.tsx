@@ -6,7 +6,7 @@ import styles from './home.module.scss'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 
 export default function Home(): ReactElement {
-	const [gameId, setGameId] = useState(0)
+	const [gameId, setGameId] = useState('')
 	const [isWarningVisible, setIsWarningVisible] = useState(false)
 	const gameLink: string = gameId !== 0 ? `/play/${gameId}` : '/'
 
@@ -22,8 +22,6 @@ export default function Home(): ReactElement {
 	if (isConnected) {
 		return (
 			<div className={styles.home}>
-				<div className="title">Connected to {connector?.name}</div>
-				<div>{address}</div>
 				<h1>triwiz</h1>
 				<p>take your prize home instantly</p>
 				<div className={styles.actions}>
@@ -42,9 +40,9 @@ export default function Home(): ReactElement {
 					<div className={styles.play}>
 						<input
 							placeholder="enter a game id"
-							type="number"
+							type="string"
 							required
-							onChange={(e) => setGameId(+e.target.value)}
+							onChange={(e) => setGameId(e.target.value)}
 							value={gameId !== 0 ? gameId : ''}
 						/>
 						<Link href={gameLink} className={styles.link} onClick={handleClick}>

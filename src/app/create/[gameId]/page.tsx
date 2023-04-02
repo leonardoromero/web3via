@@ -11,6 +11,7 @@ interface IGameProps {
 }
 
 const Game = ({ params: { gameId } }: IGameProps) => {
+	const redirectUrl = `/games-created?gameId=${gameId}`
 	return (
 		<div className={styles.gameCreated}>
 			<h2>
@@ -22,7 +23,7 @@ const Game = ({ params: { gameId } }: IGameProps) => {
 				width={250}
 				height={250}
 			/>
-			<Link href="/games-created" className={styles.link}>
+			<Link href={redirectUrl} className={styles.link}>
 				my games
 			</Link>
 		</div>
