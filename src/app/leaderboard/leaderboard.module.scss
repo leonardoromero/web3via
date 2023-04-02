@@ -1,7 +1,7 @@
 @import '../styles/common.module.scss';
 
 .loading {
-	height: 96vh;
+	height: 94vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -15,7 +15,7 @@
 }
 
 .leaderboard {
-	height: 96vh;
+	height: 94vh;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -34,7 +34,7 @@
 
 	.button {
 		position: absolute;
-		bottom: 5rem;
+		bottom: 8rem;
 		width: 25rem;
 	}
 }

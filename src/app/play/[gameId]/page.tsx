@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 
 import sandClock from '../../../../public/sand-clock.svg'
 import styles from './play.module.scss'
-import { setTimeout } from 'timers'
 interface IGameProps {
 	params: {
 		gameId: number
@@ -16,7 +15,7 @@ const Game = ({ params: { gameId } }: IGameProps) => {
 	const [isGameReady, setIsGameReady] = useState(false)
 	setTimeout(() => {
 		setIsGameReady(true)
-	}, 1500)
+	}, 2500)
 	const router = useRouter()
 
 	if (isGameReady)
@@ -55,6 +54,7 @@ const Game = ({ params: { gameId } }: IGameProps) => {
 				</div>
 			</div>
 		)
+	
 	return (
 		<div className={styles.loading}>
 			<Image src={sandClock} alt="loading image" width={250} height={250} />
